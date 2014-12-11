@@ -3,7 +3,7 @@ class nxlog (
     $package_name               =   "NXLOG-CE",
     $package_version            =   "2.8.1248",
     $install_dir                =   "C:\\Program Files (x86)\\nxlog\\",
-    $package_src                =   "http://artifactory.ds.adp.com/artifactory/binary-local/nxLog/nxlog-ce-2.8.1248.msi",
+    $package_src                =   "\\\\path\\to\\nxlog-ce-2.8.1248.msi",
     $service_name               =   "nxlog",
     $service_ensure             =   running,
     $config_dir                 =   "C:\\Program Files (x86)\\nxlog\\conf\\",
