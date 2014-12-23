@@ -21,7 +21,6 @@ class nxlog (
 {
   require staging
 
-  
 
     $local_package_msi = "${temp_media_dir}${package_name}-${package_version}.msi"
 
@@ -56,11 +55,16 @@ class nxlog (
                }
             }
             else{
-                notice("Starting the staging execution")
                 staging::file { "${package_name}-${package_version}.msi":
                     source  => "${package_src_http}",
-                    target  => "${local_package_msi}",
                     before => Package["${package_name}"],
+
+               }->
+               file { "${local_package_msi}":
+                    ensure => 'file',
+                    source => "${staging::path}/nxlog/${package_name}-${package_version}.msi",
+                    replace => false,
+                    source_permissions => ignore,
                }
             }
     
