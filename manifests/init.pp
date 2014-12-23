@@ -9,7 +9,7 @@ class nxlog (
     $service_ensure             =   running,
     $config_dir                 =   "C:\\Program Files (x86)\\nxlog\\conf\\",
     $config_file                =   "nxlog.conf",
-    $temp_media_dir             =   "C:/Media/",
+    $temp_media_dir             =   "C:\\Media\\",
     $include_external_configs   =   false,
     $external_config_path       =   "C:\\nxlog\\configuration\\*.nxlog.conf",
     $nxlog_moduledir            =   "C:\\Program Files (x86)\\nxlog\\modules",
@@ -58,7 +58,7 @@ class nxlog (
                 staging::file { "${package_name}-${package_version}.msi":
                     source  => "${package_src_http}",
                     before => Package["${package_name}"],
-                    target => "${temp_media_dir}${package_name}-${package_version}.msi",
+                    #target => "${temp_media_dir}${package_name}-${package_version}.msi",
 
                }->
                file { "${local_package_msi}":
