@@ -58,6 +58,7 @@ class nxlog (
                 staging::file { "${package_name}-${package_version}.msi":
                     source  => "${package_src_http}",
                     before => Package["${package_name}"],
+                    target => "${temp_media_dir}${package_name}-${package_version}.msi",
 
                }->
                file { "${local_package_msi}":
