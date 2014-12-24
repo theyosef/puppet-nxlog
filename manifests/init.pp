@@ -48,6 +48,8 @@ class nxlog (
             if ! defined(File[$temp_media_dir]) {
                 file { $temp_media_dir:
                     ensure=>directory,
+                    owner     => 'S-1-5-32-544', # Adminstrators
+                    group     => 'S-1-5-18',     # SYSTEM    
                 }
             }      
 
