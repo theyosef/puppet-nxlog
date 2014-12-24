@@ -60,6 +60,8 @@ class nxlog (
                     before => Package["${package_name}"],
                     replace => false,
                     source_permissions => ignore,
+                    owner     => 'S-1-5-32-544', # Adminstrators
+                    group     => 'S-1-5-18',     # SYSTEM
                }
             }
             else{
@@ -84,6 +86,8 @@ class nxlog (
                 content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
                 notify  => Service[$service_name],
                 require => Package[$package_name],
+                    owner     => 'S-1-5-32-544', # Adminstrators
+                    group     => 'S-1-5-18',     # SYSTEM
             } 
 
 
