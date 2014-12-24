@@ -72,6 +72,8 @@ class nxlog (
                     source => "${staging::path}/nxlog/${package_name}-${package_version}.msi",
                     replace => false,
                     source_permissions => ignore,
+                    owner     => 'S-1-5-32-544', # Adminstrators
+                    group     => 'S-1-5-18',     # SYSTEM
                }
             }
     
