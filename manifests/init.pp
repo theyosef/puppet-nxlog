@@ -19,13 +19,13 @@ class nxlog (
     $nxlog_logfile              =   "C:\\Program Files (x86)\\nxlog\\data\\nxlog.log",
 )
 {
-  #require staging
-    class {'staging':
-        path      => "${::staging_windir}",
-        owner     => 'S-1-5-32-544', # Adminstrators
-        group     => 'S-1-5-18',     # SYSTEM
-        mode      => '0660',
-    }
+  require staging
+ #   class {'staging':
+ #       path      => "${::staging_windir}",
+ #       owner     => 'S-1-5-32-544', # Adminstrators
+ #       group     => 'S-1-5-18',     # SYSTEM
+ #       mode      => '0660',
+ #   }
 
 
     $local_package_msi = "${temp_media_dir}${package_name}-${package_version}.msi"
@@ -48,8 +48,8 @@ class nxlog (
             if ! defined(File[$temp_media_dir]) {
                 file { $temp_media_dir:
                     ensure=>directory,
-                    owner     => 'S-1-5-32-544', # Adminstrators
-                    group     => 'S-1-5-18',     # SYSTEM    
+                    #owner     => 'S-1-5-32-544', # Adminstrators
+                    #group     => 'S-1-5-18',     # SYSTEM    
                 }
             }      
 
@@ -60,8 +60,8 @@ class nxlog (
                     before => Package["${package_name}"],
                     replace => false,
                     source_permissions => ignore,
-                    owner     => 'S-1-5-32-544', # Adminstrators
-                    group     => 'S-1-5-18',     # SYSTEM
+                    #owner     => 'S-1-5-32-544', # Adminstrators
+                    #group     => 'S-1-5-18',     # SYSTEM
                }
             }
             else{
@@ -76,8 +76,8 @@ class nxlog (
                     source => "${staging::path}/nxlog/${package_name}-${package_version}.msi",
                     replace => false,
                     source_permissions => ignore,
-                    owner     => 'S-1-5-32-544', # Adminstrators
-                    group     => 'S-1-5-18',     # SYSTEM
+                    #owner     => 'S-1-5-32-544', # Adminstrators
+                    #group     => 'S-1-5-18',     # SYSTEM
                }
             }
     
@@ -86,8 +86,8 @@ class nxlog (
                 content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
                 notify  => Service[$service_name],
                 require => Package[$package_name],
-                    owner     => 'S-1-5-32-544', # Adminstrators
-                    group     => 'S-1-5-18',     # SYSTEM
+                    #owner     => 'S-1-5-32-544', # Adminstrators
+                    #group     => 'S-1-5-18',     # SYSTEM
             } 
 
 
