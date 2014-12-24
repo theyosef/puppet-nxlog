@@ -19,7 +19,13 @@ class nxlog (
     $nxlog_logfile              =   "C:\\Program Files (x86)\\nxlog\\data\\nxlog.log",
 )
 {
-  require staging
+  #require staging
+    class {'staging':
+        path      => "${::staging_windir}",
+        owner     => 'S-1-5-32-544', # Adminstrators
+        group     => 'S-1-5-18',     # SYSTEM
+        mode      => '0660',
+    }
 
 
     $local_package_msi = "${temp_media_dir}${package_name}-${package_version}.msi"
