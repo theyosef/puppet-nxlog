@@ -38,7 +38,7 @@ class nxlog (
             package { $package_name:
                 ensure  => $package_ensure,
                 source  => $local_package_msi,
-                require => File["${local_package_msi}"]
+                require => File["${local_package_msi}"],
             }  
 
             if ! defined(File[$temp_media_dir]) {
@@ -52,6 +52,7 @@ class nxlog (
                     ensure => 'file',
                     source => "${package_src}",
                     replace => false,
+                    require => File[$temp_media_dir],
                }
             }
             else{
@@ -63,9 +64,13 @@ class nxlog (
                   ensure => 'file',
                   source => "${staging::path}/nxlog/${package_name}-${package_version}.msi",
                   replace => false,
+                  require => File[$temp_media_dir],
              }
             }
-    
+            file {"${config_dir}":
+                ensure => directory,
+            }
+            ->
             file { "${config_dir}${config_file}":
                 ensure  => present,
                 content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
