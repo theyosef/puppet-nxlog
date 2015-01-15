@@ -19,13 +19,7 @@ class nxlog (
     $nxlog_logfile              =   "C:\\Program Files (x86)\\nxlog\\data\\nxlog.log",
 )
 {
-  require staging
- #   class {'staging':
- #       path      => "${::staging_windir}",
- #       owner     => 'S-1-5-32-544', # Adminstrators
- #       group     => 'S-1-5-18',     # SYSTEM
- #       mode      => '0660',
- #   }
+  include staging
 
 
     $local_package_msi = "${temp_media_dir}${package_name}-${package_version}.msi"
@@ -43,13 +37,12 @@ class nxlog (
             package { $package_name:
                 ensure  => $package_ensure,
                 source  => $local_package_msi,
+                require => File["${local_package_msi}"]
             }  
 
             if ! defined(File[$temp_media_dir]) {
                 file { $temp_media_dir:
                     ensure=>directory,
-                    #owner     => 'S-1-5-32-544', # Adminstrators
-                    #group     => 'S-1-5-18',     # SYSTEM    
                 }
             }      
 
@@ -57,28 +50,19 @@ class nxlog (
                file { "${local_package_msi}" :
                     ensure => 'file',
                     source => "${package_src}",
-                    before => Package["${package_name}"],
                     replace => false,
-                    source_permissions => ignore,
-                    #owner     => 'S-1-5-32-544', # Adminstrators
-                    #group     => 'S-1-5-18',     # SYSTEM
                }
             }
             else{
                 staging::file { "${package_name}-${package_version}.msi":
                     source  => "${package_src_http}",
-                    before => Package["${package_name}"],
-                    #target => "${temp_media_dir}${package_name}-${package_version}.msi",
-
-               }->
-               file { "${local_package_msi}":
-                    ensure => 'file',
-                    source => "${staging::path}/nxlog/${package_name}-${package_version}.msi",
-                    replace => false,
-                    source_permissions => ignore,
-                    #owner     => 'S-1-5-32-544', # Adminstrators
-                    #group     => 'S-1-5-18',     # SYSTEM
-               }
+                }
+                ->
+                file { "${local_package_msi}":
+                  ensure => 'file',
+                  source => "${staging::path}/nxlog/${package_name}-${package_version}.msi",
+                  replace => false,
+             }
             }
     
             file { "${config_dir}${config_file}":
@@ -86,8 +70,6 @@ class nxlog (
                 content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
                 notify  => Service[$service_name],
                 require => Package[$package_name],
-                    #owner     => 'S-1-5-32-544', # Adminstrators
-                    #group     => 'S-1-5-18',     # SYSTEM
             } 
 
 
