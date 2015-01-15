@@ -32,6 +32,7 @@ class nxlog (
             service { $service_name:
                 ensure  => $service_ensure,
                 require => Package[$package_name],
+                subscribe => File["${config_dir}${config_file}"],
             }
 
             package { $package_name:
@@ -68,7 +69,6 @@ class nxlog (
             file { "${config_dir}${config_file}":
                 ensure  => present,
                 content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
-                notify  => Service[$service_name],
                 require => Package[$package_name],
             } 
 
