@@ -29,17 +29,28 @@ class nxlog (
         if $package_ensure == 'installed' or $package_ensure == 'present' {
 
             
-            service { $service_name:
-                ensure  => $service_ensure,
-                require => Package[$package_name],
-                subscribe => File["${config_dir}${config_file}"],
+            
+            
+            file {"${config_dir}":
+                ensure => directory,
             }
-
+            ->
+            
             package { $package_name:
                 ensure  => $package_ensure,
                 source  => $local_package_msi,
                 require => File["${local_package_msi}"],
-            }  
+            }
+            ->
+            file { "${config_dir}${config_file}":
+                ensure  => present,
+                content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
+            } 
+            ~>
+            service { $service_name:
+                ensure  => $service_ensure,
+            }
+
 
             if ! defined(File[$temp_media_dir]) {
                 file { $temp_media_dir:
@@ -67,15 +78,8 @@ class nxlog (
                   require => File[$temp_media_dir],
              }
             }
-            file {"${config_dir}":
-                ensure => directory,
-            }
-            ->
-            file { "${config_dir}${config_file}":
-                ensure  => present,
-                content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
-                require => Package[$package_name],
-            } 
+
+            
 
 
         } 
