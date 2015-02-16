@@ -19,7 +19,7 @@
   "project_page": "https://github.com/theyosef/puppet-nxlog",
   "dependencies": [
     { 
-      "name": "nanliu/staging", "version_requirement": ">=0.4.1 <0.5.0" 
+      "name": "nanliu/staging", "version_requirement": ">=0.4.1" 
     }
   ]
 }
