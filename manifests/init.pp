@@ -24,39 +24,41 @@ class nxlog (
 
     $local_package_msi = "${temp_media_dir}${package_name}-${package_version}.msi"
 
-    if "${operatingsystem}" == 'windows' {
+    if "${::operatingsystem}" == 'windows' {
+
+        Exec {
+            path => "${::path}",
+        }
 
         if $package_ensure == 'installed' or $package_ensure == 'present' {
 
             
-            
-            
-            file {"${config_dir}":
-                ensure => directory,
-            }
-            ->
             
             package { $package_name:
                 ensure  => $package_ensure,
                 source  => $local_package_msi,
                 require => File["${local_package_msi}"],
             }
-            ->
+            
             file { "${config_dir}${config_file}":
                 ensure  => present,
                 content => regsubst(template('nxlog/nxlog.conf.erb'), '\n', "\r\n", 'EMG'),
+                require => Package["${package_name}"],
             } 
-            ~>
+            
             service { $service_name:
                 ensure  => $service_ensure,
+                require => File["${config_dir}${config_file}"],
             }
-
-
+            
             if ! defined(File[$temp_media_dir]) {
                 file { $temp_media_dir:
                     ensure=>directory,
                 }
-            }      
+            }     
+
+
+
 
             if $package_src_http == undef {
                file { "${local_package_msi}" :
@@ -76,17 +78,17 @@ class nxlog (
                   source => "${staging::path}/nxlog/${package_name}-${package_version}.msi",
                   replace => false,
                   require => File[$temp_media_dir],
-             }
+                }
             }
 
             
 
 
-        } 
-    }      
+        } # if $package_ensure == 'installed' or $package_ensure == 'present' 
+    }# if "${::operatingsystem}" == 'windows'
     else{
         notice("NXLOG: Not supported on non-windows platforms at this time.")
-    } 
+    }# else of (if "${::operatingsystem}" == 'windows') 
       
 
 }
